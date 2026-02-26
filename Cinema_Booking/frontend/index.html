@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineBook - Modern Cinema Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="logo">🎬 CineBook</div>
+    <div class="nav-links">
+      <a href="#movies" class="nav-link">Movies</a>
+      <a href="#myBooking" class="nav-link">My Bookings</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<header class="hero">
+  <div class="hero-content">
+    <h1>🎬 Now Showing</h1>
+    <p>Book your favorite Bollywood & Hollywood movies instantly</p>
+  </div>
+</header>
+
+<!-- LOADING SPINNER -->
+<div id="loadingSpinner" class="loading-spinner hidden">
+  <div class="spinner"></div>
+  <p>Loading movies...</p>
+</div>
+
+<!-- MOVIES GRID -->
+<section id="movies" class="movies-section">
+  <div class="container">
+    <div id="movieGrid" class="movie-grid"></div>
+    <div id="emptyState" class="empty-state hidden">
+      <p>No movies available</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING MODAL -->
+<div id="bookingModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-overlay" onclick="closeBookingModal(event)"></div>
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeBookingModal()" aria-label="Close modal">×</button>
+    <h2 id="modalMovieTitle" class="modal-title"></h2>
+    
+    <!-- SLOT SELECTION -->
+    <div class="form-group">
+      <label class="form-label">Select Showtime</label>
+      <div id="modalSlots" class="slot-buttons"></div>
+    </div>
+
+    <!-- SEAT SELECTION -->
+    <div class="form-group">
+      <label class="form-label">Number of Seats</label>
+      <div class="seat-selector">
+        <button class="seat-btn" onclick="changeSeat(-1)" aria-label="Decrease seats">−</button>
+        <input id="seatInput" type="number" value="1" min="1" max="10" readonly>
+        <button class="seat-btn" onclick="changeSeat(1)" aria-label="Increase seats">+</button>
+      </div>
+      <p class="seat-info">Available seats: <span id="availableSeats">10</span></p>
+    </div>
+
+    <!-- CUSTOMER NAME -->
+    <div class="form-group">
+      <label class="form-label">Your Name</label>
+      <input 
+        id="nameInput" 
+        class="form-input" 
+        type="text" 
+        placeholder="Enter your full name"
+        autocomplete="name"
+        required>
+    </div>
+
+    <!-- CUSTOMER TYPE -->
+    <div class="form-group">
+      <label class="form-label">Ticket Type</label>
+      <select id="typeInput" class="form-select" required>
+        <option value="Normal">Normal Customer</option>
+        <option value="VIP">VIP Member</option>
+      </select>
+    </div>
+
+    <!-- PRICE SUMMARY -->
+    <div class="price-summary">
+      <div class="price-row">
+        <span>Seat Price (₹):</span>
+        <span id="pricePerSeat">₹500</span>
+      </div>
+      <div class="price-row">
+        <span>Quantity:</span>
+        <span id="priceQuantity">1</span>
+      </div>
+      <div class="price-row total">
+        <span>Total:</span>
+        <span id="priceTotal">₹500</span>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeBookingModal()">Cancel</button>
+      <button id="confirmBookingBtn" class="btn btn-primary" onclick="confirmBooking()" disabled>
+        <span class="btn-text">Confirm Booking</span>
+        <span class="btn-loader hidden"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION PANEL -->
+<div id="confirmationPanel" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-overlay" onclick="closeConfirmation()"></div>
+  <div class="confirmation-box">
+    <div class="checkmark">✓</div>
+    <h2>Booking Confirmed!</h2>
+    <div id="confirmationDetails" class="confirmation-details"></div>
+    <p class="confirmation-hint">Save your Ticket ID to find your booking later</p>
+    <div class="confirmation-actions">
+      <button class="btn btn-primary" onclick="copyTicketId()">Copy Ticket ID</button>
+      <button class="btn btn-secondary" onclick="closeConfirmation()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- MY BOOKINGS SECTION -->
+<section id="myBooking" class="bookings-section">
+  <div class="container">
+    <h2>My Bookings</h2>
+    
+    <!-- SEARCH BOOKING -->
+    <div class="search-container">
+      <div class="search-box">
+        <input 
+          id="search_id" 
+          class="form-input" 
+          type="text" 
+          placeholder="Enter Ticket ID (e.g., TICKET-001)"
+          autocomplete="off">
+        <button class="btn btn-primary" onclick="searchTicket()">Find Booking</button>
+      </div>
+      <p class="search-hint">Don't remember your ID? Check "Last Booking" below</p>
+    </div>
+
+    <!-- SEARCH RESULT -->
+    <div id="bookingCard" class="booking-card hidden">
+      <div class="booking-card-inner"></div>
+    </div>
+
+    <!-- LAST BOOKING -->
+    <div class="last-booking-container">
+      <h3>Last Booking</h3>
+      <div id="lastBooking" class="booking-card hidden">
+        <div class="booking-card-inner"></div>
+      </div>
+      <div id="noLastBooking" class="empty-booking">
+        <p>No booking history yet</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOAST NOTIFICATIONS -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
